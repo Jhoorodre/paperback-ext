@@ -321,7 +321,7 @@ class MangaLivre {
                 console.log(`[MANGALIVRE] Found manga: ${title} (ID: ${mangaId})`);
                 results.push({
                     id: mangaId,
-                    titles: [title],
+                    title: title, // Corrigido para title ao invés de titles array
                     image: image ?? '',
                 });
             }
