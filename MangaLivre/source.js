@@ -291,13 +291,22 @@ class MangaLivre {
 
     parseSearch($) {
         const results = [];
-        $('.c-tabs-item__content, .manga-item, .search-item').each((_, element) => {
+        console.log('[MANGALIVRE] Parsing search results...');
+        
+        // Seletores corretos para mangalivre.tv
+        $('.manga__item').each((_, element) => {
             const $el = $(element);
-            const $link = $el.find('a').first();
-            const title = $link.attr('title') ?? $link.text().trim();
-            const href = $link.attr('href');
-            const $img = $el.find('img').first();
-            let image = $img.attr('src') ?? $img.attr('data-src');
+            
+            // Buscar título no link dentro de h2
+            const $titleLink = $el.find('.manga__content h2 a').first();
+            const title = $titleLink.text().trim();
+            const href = $titleLink.attr('href');
+            
+            // Buscar imagem no thumb
+            const $img = $el.find('.manga__thumb img').first();
+            let image = $img.attr('src') ?? $img.attr('data-src') ?? $img.attr('data-lazy-src');
+            
+            // Processar URL da imagem
             if (image && !image.startsWith('http')) {
                 image = ML_DOMAIN + (image.startsWith('/') ? image : '/' + image);
             }
@@ -306,8 +315,10 @@ class MangaLivre {
                 image = image.replace(/\?resize=[^&]*/g, '');
                 image = image.replace(/&ssl=1/g, '');
             }
+            
             if (title && href) {
                 const mangaId = href.replace(/^.*\/manga\/([^/]+)\/?.*$/, '$1');
+                console.log(`[MANGALIVRE] Found manga: ${title} (ID: ${mangaId})`);
                 results.push({
                     id: mangaId,
                     titles: [title],
@@ -315,6 +326,8 @@ class MangaLivre {
                 });
             }
         });
+        
+        console.log(`[MANGALIVRE] Parsed ${results.length} manga results`);
         return results;
     }
 }
