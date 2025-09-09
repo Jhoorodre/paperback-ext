@@ -35,12 +35,14 @@ class MangaLivre {
     }
 
     getMangaShareUrl(mangaId) {
-        return `${ML_DOMAIN}/manga/${mangaId}/`;
+        // Decodificar a URL da base64
+        return atob(mangaId);
     }
 
     async getMangaDetails(mangaId) {
         console.log('[MANGALIVRE] Getting manga details for:', mangaId);
-        const url = `${ML_DOMAIN}/manga/${mangaId}/`;
+        // Decodificar a URL da base64
+        const url = atob(mangaId);
         const request = {
             url: url,
             method: 'GET',
@@ -53,7 +55,8 @@ class MangaLivre {
 
     async getChapters(mangaId) {
         console.log('[MANGALIVRE] Getting chapters for:', mangaId);
-        const url = `${ML_DOMAIN}/manga/${mangaId}/`;
+        // Decodificar a URL da base64
+        const url = atob(mangaId);
         const request = {
             url: url,
             method: 'GET',
@@ -317,8 +320,10 @@ class MangaLivre {
             }
             
             if (title && href) {
-                const mangaId = href.replace(/^.*\/manga\/([^/]+)\/?.*$/, '$1');
-                console.log(`[MANGALIVRE] Found manga: ${title} (ID: ${mangaId})`);
+                // Usar URL completa como o MangaKatana faz
+                const fullUrl = href.startsWith('http') ? href : `https://mangalivre.tv${href}`;
+                const mangaId = btoa(fullUrl); // Codificar em base64
+                console.log(`[MANGALIVRE] Found manga: ${title} (URL: ${fullUrl}, ID: ${mangaId})`);
                 results.push({
                     id: mangaId,
                     title: title, // Corrigido para title ao invés de titles array
