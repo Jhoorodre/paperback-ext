@@ -1,0 +1,11 @@
+node_modules/
+*.log
+.DS_Store
+.env
+dist/
+build/
+.nyc_output/
+coverage/
+.vscode/
+*.tgz
+*.tar.gz
